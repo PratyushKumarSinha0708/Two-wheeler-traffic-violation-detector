@@ -5,7 +5,7 @@ const { detectViolation } = require("../services/detectorService");
 const deleteFile = require("../utils/deleteFile");
 
 const uploadFile = async (req, res) => {
-    // console.log("entered the uploadFile module")
+    console.log("entered the uploadFile module")
     let filePath = null;
     try {
         if (!req.file) {
@@ -16,7 +16,9 @@ const uploadFile = async (req, res) => {
         }
 
         filePath = path.resolve(req.file.path);
+        console.log("going to call for detection")
         const result = await detectViolation(filePath);
+        console.log("fetched the detection")
         deleteFile(filePath);
 
         return res.json({
