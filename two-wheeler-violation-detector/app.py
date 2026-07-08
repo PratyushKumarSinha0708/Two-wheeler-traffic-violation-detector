@@ -21,7 +21,7 @@ def home():
 
 
 @app.post("/detect")
-async def detect(file: UploadFile = File(...)):
+def detect(file: UploadFile = File(...)):
 
     # Create a unique filename
     extension = os.path.splitext(file.filename)[1]
