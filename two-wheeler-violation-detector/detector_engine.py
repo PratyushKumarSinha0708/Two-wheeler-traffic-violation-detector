@@ -1,5 +1,6 @@
 import os
 import cv2
+import base64
 
 from config import *
 
@@ -95,12 +96,13 @@ def process_image(image_path):
 
     violation_count = len(helmet) + len(triple)
 
+    image_base64 = None
+
     if violation_count > 0:
 
-        cv2.imwrite(
-            str(VIOLATION_IMAGE),
-            annotated_frame
-        )
+        _, buffer = cv2.imencode(".jpg", annotated_frame)
+
+        image_base64 = base64.b64encode(buffer).decode("utf-8")
 
     return {
         "status": "success",
@@ -109,8 +111,7 @@ def process_image(image_path):
             "helmet": len(helmet),
             "triple": len(triple)
         },
-        "image_path": str(VIOLATION_IMAGE)
-        if violation_count > 0 else None
+        "image": image_base64
     }
 
 
@@ -125,20 +126,8 @@ def process_video(video_path):
             "message": "Cannot open video."
         }
 
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 30
-
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-
-    out = cv2.VideoWriter(
-        str(OUTPUT_VIDEO),
-        fourcc,
-        fps,
-        (width, height)
-    )
-
     max_violation = 0
+    best_frame = None
 
     violation_types = {
         "helmet": 0,
@@ -154,8 +143,6 @@ def process_video(video_path):
 
         annotated_frame, helmet, triple = process_frame(frame)
 
-        out.write(annotated_frame)
-
         count = len(helmet) + len(triple)
 
         if count >= max_violation:
@@ -165,10 +152,7 @@ def process_video(video_path):
             violation_types["helmet"] = len(helmet)
             violation_types["triple"] = len(triple)
 
-            cv2.imwrite(
-                str(VIOLATION_IMAGE),
-                annotated_frame
-            )
+            best_frame = annotated_frame.copy()
 
         # Skip frames
         for _ in range(FRAME_SKIP - 1):
@@ -177,15 +161,20 @@ def process_video(video_path):
                 break
 
     cap.release()
-    out.release()
+
+    image_base64 = None
+
+    if best_frame is not None:
+
+        _, buffer = cv2.imencode(".jpg", best_frame)
+
+        image_base64 = base64.b64encode(buffer).decode("utf-8")
 
     return {
         "status": "success",
         "violation": max_violation > 0,
         "violation_types": violation_types,
-        "image_path": str(VIOLATION_IMAGE)
-        if max_violation > 0 else None,
-        "video_path": str(OUTPUT_VIDEO)
+        "image": image_base64
     }
 
 

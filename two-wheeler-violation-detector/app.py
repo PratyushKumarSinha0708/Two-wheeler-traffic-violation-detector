@@ -1,13 +1,15 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File
+import os
+import shutil
+import uuid
 
 from detector_engine import detect_file
 
 app = FastAPI()
 
-
-class DetectionRequest(BaseModel):
-    file_path: str
+# Temporary upload folder
+UPLOAD_FOLDER = "temp_uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 @app.get("/")
@@ -19,8 +21,25 @@ def home():
 
 
 @app.post("/detect")
-def detect(request: DetectionRequest):
+async def detect(file: UploadFile = File(...)):
 
-    result = detect_file(request.file_path)
+    # Create a unique filename
+    extension = os.path.splitext(file.filename)[1]
+    filename = f"{uuid.uuid4()}{extension}"
+
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+    # Save uploaded file temporarily
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        # Run your detector
+        result = detect_file(file_path)
+
+    finally:
+        # Delete temporary file after processing
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
     return result
