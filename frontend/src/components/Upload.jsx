@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 
-function Upload({setResult}) {
+function Upload({setResult , setBtnClicked}) {
 
     const [file, setFile] = useState(null)
 
@@ -34,6 +34,10 @@ function Upload({setResult}) {
       alert("Please select a file");
       return;
     }
+    
+    setResult(null);
+
+    setBtnClicked(true);
 
     const formData = new FormData();
 

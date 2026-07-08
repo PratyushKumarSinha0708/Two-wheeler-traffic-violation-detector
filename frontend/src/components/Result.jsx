@@ -1,17 +1,20 @@
 import React from 'react'
 import Button from '@mui/material/Button'
 
-function Result({ result }) {
+function Result({ result, btnClicked }) {
 
   if (!result) {
     return (
-      <h2>No file processed yet.</h2>
+      <>
+        <h2>No file processed yet.</h2>
+        {btnClicked && (<h3>Loading...</h3>)}
+      </>
     );
   }
 
   const imageUrl = `data:image/jpeg;base64,${result.image}`;
 
-    const handleDownload = () => {
+  const handleDownload = () => {
     const link = document.createElement("a");
     link.href = imageUrl;
     link.download = "violation.jpg";
@@ -27,7 +30,9 @@ function Result({ result }) {
           <img src={imageUrl} alt="Detected Violations" />
         </div>
         <div className="result-violations">
-          <div><h3>Detected Violations:</h3></div>
+          <div>
+            <h3>Detected Violations:</h3>
+          </div>
           <div className="violations-list">
 
             {result.violation_types.helmet > 0 && (
