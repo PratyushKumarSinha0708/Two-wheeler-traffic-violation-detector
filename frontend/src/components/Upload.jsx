@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 
-function Upload() {
+function Upload({setResult}) {
 
     const [file, setFile] = useState(null)
 
@@ -50,6 +50,8 @@ function Upload() {
           },
         }
       );
+
+      setResult(response.data);
 
       console.log(response.data);
     } catch (err) {

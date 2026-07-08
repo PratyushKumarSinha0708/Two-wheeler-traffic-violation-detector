@@ -1,16 +1,19 @@
 import React from 'react'
 import Upload from './Upload'
 import Result from './Result'
+import { useState } from 'react'
 
 function Dashboard() {
+  const [result,setResult] = useState(null)
+
   return (
     <>
       <div className="dashboard-container">
         <div className="dashboard-upload">
-          <Upload />
+          <Upload setResult={setResult}/>
         </div>
         <div className="dashboard-result">
-          <Result />
+          <Result result={result}/>
         </div>
       </div>
     </>
