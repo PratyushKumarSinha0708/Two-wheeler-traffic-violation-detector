@@ -30,6 +30,8 @@ def process_frame(frame):
     - triple riding violations
     """
 
+    frame = cv2.resize(frame, (640, 640))
+
     results = detector.detect(frame)
 
     annotated_frame = results[0].plot()
@@ -84,6 +86,8 @@ def process_frame(frame):
 def process_image(image_path):
 
     frame = cv2.imread(image_path)
+
+    frame = cv2.resize(frame, (640, 640))
 
     if frame is None:
 
