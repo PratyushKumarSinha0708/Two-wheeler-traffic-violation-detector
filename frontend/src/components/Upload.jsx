@@ -46,7 +46,7 @@ function Upload({setResult , setBtnClicked}) {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/upload",
+        "https://two-wheeler-traffic-violation-detector-s751.onrender.com/api/upload",
         formData,
         {
           headers: {
