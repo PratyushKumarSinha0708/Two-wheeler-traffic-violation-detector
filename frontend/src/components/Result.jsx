@@ -7,7 +7,7 @@ function Result({ result, btnClicked }) {
     return (
       <>
         <h2>No file processed yet.</h2>
-        {btnClicked && (<h3>Loading...</h3>)}
+        {btnClicked && (<h3>Processing...</h3>)}
       </>
     );
   }
