@@ -15,9 +15,9 @@ function Navbar() {
                     </div>
                 </div>
 
-                <div className="navbar-history-button">
+                {/* <div className="navbar-history-button">
                     <Button variant="contained" size='small'>History</Button>
-                </div> */}
+                </div>  */}
 
             </div>
 
