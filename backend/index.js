@@ -7,7 +7,7 @@ const redis = require("./helper/redis");
 
 
 const MAX_ALLOWED_REQ = 5;
-const MAX_TIME = 15cd ;
+const MAX_TIME = 15 ;
 
 const app = express();
 
